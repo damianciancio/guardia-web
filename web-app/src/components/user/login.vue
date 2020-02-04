@@ -16,17 +16,23 @@ export default {
     data(){
         return {
             username: '',
-            password: ''
+            password: '',
+            test: 'not logged'
         }
     },
     computed:{
-        test: function() {
-            return this.$store.state.test;
-        }
+
     },  
     methods: {
         login: function() {
-
+            this.$store.dispatch('login', {username: this.username, password: this.password})
+            .then(res => {
+                res;
+                this.test = 'logged!';
+            })
+            .catch(err => {
+                err ;
+            });
         }
     }
 }
