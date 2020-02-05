@@ -5,6 +5,11 @@ import axios from 'axios';
 
 Vue.use(Vuex);
 
+const config = {
+	// headers: { 'Authorization': 'Bearer ' + localStorage.access_token }
+	headers: { 'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTM3MjQxMzk2YTBkZTE1OWI0YTQxNDMiLCJ1c2VybmFtZSI6ImZyYW5jaW5hY2F2YWxsbyIsImV4cCI6MTU4MTUzNzc3NSwiaWF0IjoxNTgwOTMyOTc1fQ.uCU7tt1e--4Jed6oTtBfzc_N1jIvOZnE0FJ_u-7wstM' }
+};
+
 const store = new Vuex.Store({
     state: {
         token: localStorage.getItem('access_token') || null,
@@ -39,7 +44,26 @@ const store = new Vuex.Store({
                     reject(err);
                 }); 
             });
+        },
+        getAllAttentions: function(context){
+            return new Promise((resolve, reject) =>{
+                axios.get(context.state.apiRoot + '/attentions', config)
+                .then(function(response){
+                    resolve(response);
+                })
+                .catch(err => reject(err));
+            });
+        },
+        dischargePatient: function(context, attention_id){
+            return new Promise((resolve, reject) => {
+                axios.put(context.state.apiRoot + '/attentions/' + attention_id + '/close', config)
+                .then(function(response){
+                    resolve(response);
+                })
+                .catch(err => reject(err));
+            })
         }
+
     }
 });
 

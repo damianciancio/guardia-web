@@ -1,16 +1,20 @@
 <template>
   <div id="app">
-    <Login />
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 import Login from './components/user/login.vue';
+import AttentionsList from './components/attentions/AttentionsList.vue';
 
 export default {
   name: 'app',
   components: {
-    Login
+    // eslint-disable-next-line vue/no-unused-components
+    Login,
+    // eslint-disable-next-line vue/no-unused-components
+    AttentionsList
   }
 }
 </script>

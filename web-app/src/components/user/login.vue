@@ -5,7 +5,6 @@
         <label>Contraseña</label>
         <input type="password" v-model="password" />
         <input type="button" v-on:click="login" value="Iniciar sesión" />
-        {{ test }}
     </div>
 </template>
 
@@ -16,8 +15,7 @@ export default {
     data(){
         return {
             username: '',
-            password: '',
-            test: 'not logged'
+            password: ''
         }
     },
     computed:{
@@ -28,7 +26,7 @@ export default {
             this.$store.dispatch('login', {username: this.username, password: this.password})
             .then(res => {
                 res;
-                this.test = 'logged!';
+                this.$router.replace({path:'atenciones'});
             })
             .catch(err => {
                 err ;
