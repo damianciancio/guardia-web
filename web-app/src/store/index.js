@@ -54,6 +54,17 @@ const store = new Vuex.Store({
                 .catch(err => reject(err));
             });
         },
+        getAllSections: function(context){
+            return new Promise((resolve, reject) => {
+                axios.get(context.state.apiRoot + '/sections', config)
+                .then((response) => {
+                    resolve(response);
+                })
+                .catch((err) => {
+                    reject(err);
+                })
+            });
+        },
         dischargePatient: function(context, attention_id){
             return new Promise((resolve, reject) => {
                 axios.put(context.state.apiRoot + '/attentions/' + attention_id + '/close', config)

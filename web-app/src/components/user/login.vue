@@ -1,10 +1,36 @@
 <template>
-    <div>
-        <label>Usuario</label>
-        <input type="text" v-model="username" />
-        <label>Contraseña</label>
-        <input type="password" v-model="password" />
-        <input type="button" v-on:click="login" value="Iniciar sesión" />
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
+            <b-form>
+                <b-form-group
+                    label="Usuario"
+                    label-for="username"
+                >
+                    <b-form-input
+                        id="username"
+                        v-model="username"
+                        type="text"
+                        required
+                        placeholder="Ingrese nombre de usuario"
+                        >
+                    </b-form-input>
+                </b-form-group>
+
+                <b-form-group
+                    label="Contraseña"
+                    label-for="password"
+                >
+                    <b-form-input
+                        id="password"
+                        v-model="password"
+                        type="password"
+                        required
+                        >
+                    </b-form-input>
+                </b-form-group>
+                <b-button type="button" v-on:click="login" variant="primary">Iniciar sesión</b-button>
+            </b-form>
+        </div>
     </div>
 </template>
 
