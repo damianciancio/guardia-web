@@ -6,8 +6,8 @@ import axios from 'axios';
 Vue.use(Vuex);
 
 const config = {
-	// headers: { 'Authorization': 'Bearer ' + localStorage.access_token }
-	headers: { 'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTM3MjQxMzk2YTBkZTE1OWI0YTQxNDMiLCJ1c2VybmFtZSI6ImZyYW5jaW5hY2F2YWxsbyIsImV4cCI6MTU4MTUzNzc3NSwiaWF0IjoxNTgwOTMyOTc1fQ.uCU7tt1e--4Jed6oTtBfzc_N1jIvOZnE0FJ_u-7wstM' }
+	headers: { 'Authorization': 'Bearer ' + localStorage.access_token }
+	// headers: { 'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTM3MjQxMzk2YTBkZTE1OWI0YTQxNDMiLCJ1c2VybmFtZSI6ImZyYW5jaW5hY2F2YWxsbyIsImV4cCI6MTU4MTUzNzc3NSwiaWF0IjoxNTgwOTMyOTc1fQ.uCU7tt1e--4Jed6oTtBfzc_N1jIvOZnE0FJ_u-7wstM' }
 };
 
 const store = new Vuex.Store({
@@ -73,6 +73,15 @@ const store = new Vuex.Store({
                 })
                 .catch(err => reject(err));
             })
+        },
+        saveAttention: function(context, attention){
+            return new Promise((resolve, reject) => {
+                axios.post(context.state.apiRoot + '/attentions', attention, config)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(err => reject(err));
+            });
         }
 
     }

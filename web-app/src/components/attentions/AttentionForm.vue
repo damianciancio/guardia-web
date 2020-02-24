@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-12">
             <h1>Agregar atención</h1>
-            <b-form>
+            <div>
                 <b-form-group
                     label="Nombre"
                     label-for="patient-name"
@@ -37,7 +37,7 @@
                 >
                     <b-form-textarea
                         id="patient-condition"
-                        v-model="attention.patient_condition"
+                        v-model="attention.medical_condition"
                         type="text"
                         required
                         placeholder="Ingrese una breve descripción de los síntomas que presenta el paciente"
@@ -71,6 +71,7 @@
                         <option
                             v-for="section in sections"
                             :key="section._id"
+                            v-bind:value="section"
                         >   
                             {{section.description}}
                         </option>
@@ -95,7 +96,9 @@
                         </option>
                     </select>
                 </b-form-group>
-            </b-form>
+                <button class="btn btn-primary" v-on:click="save" >Guardar</button>
+                <button style="display: none;" class="btn btn-primary" type="submit"    v-on:click="save" >Guardar</button>
+            </div>
         </div>
     </div>
 </template>
@@ -106,7 +109,7 @@ export default {
             attention: {
                 patient_name: '',
                 patient_age: null,
-                patient_condition: null,
+                medical_condition: null,
                 pending_jobs: [],
                 service: null,
                 bed: null,
@@ -119,6 +122,13 @@ export default {
     watch: {
         'attention.section': function(){
             if(this.attention.section){
+                // var objSection = this.sections.find(section => {
+                //     return section._id == this.attention.section;
+                // });
+                // // eslint-disable-next-line no-console
+                // console.log(this.attention.section);
+                this.attention.bed = null;
+                this.attention.section_id = this.attention.section._id;
                 this.beds = this.attention.section.beds;
             }
         }
@@ -136,6 +146,19 @@ export default {
         .catch(err => {
             err;
         });
+    },
+    methods: {
+        save: function() {
+            var app = this;
+            this.$store.dispatch('saveAttention', this.attention)
+            .then(function(response){
+                // eslint-disable-next-line no-console
+                console.log(response);
+                app.$router.replace({path:'atenciones'});
+                // alert('Atención ingresada con éxito!');
+            })
+            .catch();
+        }
     }
 }
 </script>

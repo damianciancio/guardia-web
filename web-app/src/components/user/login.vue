@@ -28,7 +28,11 @@
                         >
                     </b-form-input>
                 </b-form-group>
-                <b-button type="button" v-on:click="login" variant="primary">Iniciar sesión</b-button>
+                <div class="row">
+                    <div class="col-md-12">
+                        <b-button type="button" v-on:click="login" variant="primary">Iniciar sesión</b-button>
+                    </div>
+                </div>
             </b-form>
         </div>
     </div>

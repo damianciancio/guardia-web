@@ -1,6 +1,6 @@
 <template>
     <div>
-        <table class="table">
+        <table v-if="!isMobile" class="table">
             <thead>
                 <tr>
                     <th>Cama</th>
@@ -42,24 +42,50 @@
                         {{attention.service}}
                     </td>
                     <td>
-                        <button class="btn btn-success btn-sm" v-if="!attention.out_timestamp" v-on:click="dischargePatient(attention._id)">Dar de alta</button>
-                        <button class="btn btn-success btn-sm" v-if="!attention.out_timestamp" v-on:click="addJob(attention._id)">Agregar estudio</button>
+                        <button class="btn btn-primary btn-sm" v-if="!attention.out_timestamp" v-on:click="addJob(attention._id)">Agregar estudio</button>
+                        <button class="btn btn-success btn-sm" v-if="!attention.out_timestamp" v-on:click="dischargePatient(attention._id)">Listo</button>
                     </td>
                 </tr>
             </tbody>
         </table>
+        <div v-if="isMobile">
+            <ul class="list-group">
+                <li v-for="attention in attentions" :key="attention._id" class="list-group-item">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">{{attention.section.description}} - {{attention.bed.description}} </h4>
+                            <h6 class="card-subtitle">{{attention.patient_name}} - {{attention.patient_age}} años </h6>
+                            <div>{{ attention.medical_condition }}</div>
+                            <span>Ingreso: {{attention.in_timestamp | moment('DD/MM/YYYY HH:mm')}}</span>
+                            <template v-if="attention.pending_jobs.length != 0">
+                                <div div data-toggle="collapse" :href="'#attention-pending-jobs-' + attention._id" >{{ attention.pending_jobs.length }} estudio(s) pendiente(s)</div>
+                                <div :id="'#attention-pending-jobs-' + attention._id" >
+                                    <ul>
+                                        <li v-for="job in attention.pending_jobs" :key="job._id" >
+                                            {{job.job.description}} <button class="btn btn-success btn-sm"><b-icon-check></b-icon-check></button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
         <router-link class="btn btn-primary btn-sm" to="/atenciones/agregar">Agregar</router-link>
     </div>
 </template>
 
 <script>
+// import { isMobile } from 'mobile-device-detect';
 /* eslint-disable no-console */
 /* eslint-disable no-console */
 export default {
     name: 'AttentionsList',
     data(){
         return {
-            attentions: []
+            attentions: [],
+            isMobile: true
         }
     },
     mounted: function(){
