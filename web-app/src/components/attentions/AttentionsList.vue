@@ -1,78 +1,83 @@
 <template>
     <div>
-        <table v-if="!isMobile" class="table">
-            <thead>
-                <tr>
-                    <th>Cama</th>
-                    <th>Nombre</th>
-                    <th>Edad</th>
-                    <th>Ingreso</th>
-                    <th>Síntomas</th>
-                    <th>Exámenes pendientes</th>
-                    <th>Servicio</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="attention in attentions" :key="attention._id">
-                    <td>
-                        {{attention.bed.description}}
-                    </td>
-                    <td>
-                        {{attention.patient_name}}
-                    </td>
-                    <td>
-                        {{attention.patient_age}}
-                    </td>
-                    <td>
-                        {{attention.in_timestamp | moment('DD/MM/YYYY HH:mm')}}
-                    </td>
-                    <td>
-                        {{attention.medical_condition}}
-                    </td>
-                    <td>
-                        <b-list-group>
-                            <b-list-group-item v-for="job in attention.pending_jobs" :key="job._id">
-                                <span>{{job.job.description}}</span> 
-                                <button class="btn btn-primary btn-sm">Listo</button>
-                            </b-list-group-item>
-                        </b-list-group>
-                    </td>
-                    <td>
-                        {{attention.service}}
-                    </td>
-                    <td>
-                        <button class="btn btn-primary btn-sm" v-if="!attention.out_timestamp" v-on:click="addJob(attention._id)">Agregar estudio</button>
-                        <button class="btn btn-success btn-sm" v-if="!attention.out_timestamp" v-on:click="dischargePatient(attention._id)">Listo</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div v-if="isMobile">
-            <ul class="list-group">
-                <li v-for="attention in attentions" :key="attention._id" class="list-group-item">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">{{attention.section.description}} - {{attention.bed.description}} </h4>
-                            <h6 class="card-subtitle">{{attention.patient_name}} - {{attention.patient_age}} años </h6>
-                            <div>{{ attention.medical_condition }}</div>
-                            <span>Ingreso: {{attention.in_timestamp | moment('DD/MM/YYYY HH:mm')}}</span>
-                            <template v-if="attention.pending_jobs.length != 0">
-                                <div div data-toggle="collapse" :href="'#attention-pending-jobs-' + attention._id" >{{ attention.pending_jobs.length }} estudio(s) pendiente(s)</div>
-                                <div :id="'#attention-pending-jobs-' + attention._id" >
-                                    <ul>
-                                        <li v-for="job in attention.pending_jobs" :key="job._id" >
-                                            {{job.job.description}} <button class="btn btn-success btn-sm"><b-icon-check></b-icon-check></button>
-                                        </li>
-                                    </ul>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="text-right">
+                    <router-link class="btn btn-success btn mt-4" to="/atenciones/agregar">Nueva atención</router-link>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Pasillo</h1>
+            </div>
+            <div class="col-md-12">
+                <div v-for="attention in attentions" :key="attention._id" class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h4 class="card-title">
+                                            {{attention.bed.description}} - {{attention.patient_name}} ({{attention.patient_age}})
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="text-right">
+                                            <span class="mr-2">
+                                                <a href="#">Editar</a>
+                                            </span>
+                                            <span>
+                                                <a href="#">Listo</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="text-right">
+                                            <span>
+                                                {{attention.in_timestamp | moment('DD/MM/YYYY HH:mm')}}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </template>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ul>
+                                            <li>Servicio: cirugía</li>
+                                            <li>Síntomas: {{ attention.medical_condition }}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div v-if="attention.pending_jobs.length != 0">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h5>Estudios pendientes</h5>
+                                                    <ul>
+                                                        <li v-for="job in attention.pending_jobs" :key="job._id">
+                                                            <b-icon-clock></b-icon-clock> {{job.job.description}} 
+                                                            <button class="btn btn-default btn-sm">
+                                                                Listo
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="text-right">
+                                                        <a href="#">Agregar estudio</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
-        <router-link class="btn btn-primary btn-sm" to="/atenciones/agregar">Agregar</router-link>
     </div>
 </template>
 
@@ -111,3 +116,8 @@ export default {
     }
 }
 </script>
+<style>
+    li {
+        list-style-type: none;
+    }
+</style>
