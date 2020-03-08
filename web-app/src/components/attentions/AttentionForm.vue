@@ -122,11 +122,6 @@ export default {
     watch: {
         'attention.section': function(){
             if(this.attention.section){
-                // var objSection = this.sections.find(section => {
-                //     return section._id == this.attention.section;
-                // });
-                // // eslint-disable-next-line no-console
-                // console.log(this.attention.section);
                 this.attention.bed = null;
                 this.attention.section_id = this.attention.section._id;
                 this.beds = this.attention.section.beds;
@@ -135,12 +130,8 @@ export default {
     },
     mounted: function() {
         var app = this;
-        // eslint-disable-next-line no-console
-        console.log("sad");
         this.$store.dispatch('getAllSections')
         .then(function(response){
-            // eslint-disable-next-line no-console
-            console.log(response.data.sections);
             app.sections = response.data.sections;
         })
         .catch(err => {
