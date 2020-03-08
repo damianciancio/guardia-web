@@ -5,10 +5,10 @@ import axios from 'axios';
 
 Vue.use(Vuex);
 
-const config = {
-	headers: { 'Authorization': 'Bearer ' + localStorage.access_token }
-	// headers: { 'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTM3MjQxMzk2YTBkZTE1OWI0YTQxNDMiLCJ1c2VybmFtZSI6ImZyYW5jaW5hY2F2YWxsbyIsImV4cCI6MTU4MTUzNzc3NSwiaWF0IjoxNTgwOTMyOTc1fQ.uCU7tt1e--4Jed6oTtBfzc_N1jIvOZnE0FJ_u-7wstM' }
-};
+// const config = {
+// 	headers: { 'Authorization': 'Bearer ' + localStorage.access_token }
+// 	// headers: { 'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTM3MjQxMzk2YTBkZTE1OWI0YTQxNDMiLCJ1c2VybmFtZSI6ImZyYW5jaW5hY2F2YWxsbyIsImV4cCI6MTU4MTUzNzc3NSwiaWF0IjoxNTgwOTMyOTc1fQ.uCU7tt1e--4Jed6oTtBfzc_N1jIvOZnE0FJ_u-7wstM' }
+// };
 
 const store = new Vuex.Store({
     state: {
@@ -25,6 +25,10 @@ const store = new Vuex.Store({
     getters: {
         rootApiAddress: state => {
             return state.apiRoot;
+        },
+        authenticationHeader: () => {
+            var headers = { 'Authorization': 'Bearer ' + localStorage.access_token };
+            return {'headers': headers};
         }
     },
     actions: {
@@ -47,7 +51,7 @@ const store = new Vuex.Store({
         },
         getAllAttentions: function(context){
             return new Promise((resolve, reject) =>{
-                axios.get(context.state.apiRoot + '/attentions', config)
+                axios.get(context.state.apiRoot + '/attentions', store.getters.authenticationHeader)
                 .then(function(response){
                     resolve(response);
                 })
@@ -56,7 +60,7 @@ const store = new Vuex.Store({
         },
         getAllSections: function(context){
             return new Promise((resolve, reject) => {
-                axios.get(context.state.apiRoot + '/sections', config)
+                axios.get(context.state.apiRoot + '/sections', store.getters.authenticationHeader)
                 .then((response) => {
                     resolve(response);
                 })
@@ -67,7 +71,7 @@ const store = new Vuex.Store({
         },
         dischargePatient: function(context, attention_id){
             return new Promise((resolve, reject) => {
-                axios.put(context.state.apiRoot + '/attentions/' + attention_id + '/close', config)
+                axios.put(context.state.apiRoot + '/attentions/' + attention_id + '/close', store.getters.authenticationHeader)
                 .then(function(response){
                     resolve(response);
                 })
@@ -76,7 +80,7 @@ const store = new Vuex.Store({
         },
         saveAttention: function(context, attention){
             return new Promise((resolve, reject) => {
-                axios.post(context.state.apiRoot + '/attentions', attention, config)
+                axios.post(context.state.apiRoot + '/attentions', attention, store.getters.authenticationHeader)
                 .then(response => {
                     resolve(response);
                 })
