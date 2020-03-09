@@ -12,6 +12,11 @@
                     <b-nav-text>Atenciones</b-nav-text>
                 </router-link>
             </b-navbar-nav>
+            <b-navbar-nav>
+                <router-link to="/secciones/agregar">
+                    <b-nav-text>Secciones</b-nav-text>
+                </router-link>
+            </b-navbar-nav>
             </b-collapse>
         </b-navbar>
     </div>
