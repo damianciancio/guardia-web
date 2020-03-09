@@ -7,12 +7,12 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div v-for="section in sections" :key="section._id" class="row">
             <div class="col-md-12">
-                <h1>Pasillo</h1>
+                <h1>{{section.description}}</h1>
             </div>
             <div class="col-md-12">
-                <div v-for="attention in attentions" :key="attention._id" class="row">
+                <div v-for="attention in section.attentions" :key="attention._id" class="row">
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
@@ -28,7 +28,7 @@
                                                 <a href="#">Editar</a>
                                             </span>
                                             <span>
-                                                <a href="#">Listo</a>
+                                                <a v-on:click="dischargePatient(attention._id)">Listo</a>
                                             </span>
                                         </div>
                                     </div>
@@ -90,26 +90,42 @@ export default {
     data(){
         return {
             attentions: [],
-            isMobile: true
+            isMobile: true,
+            sections: []
         }
     },
     mounted: function(){
         var app = this;
-        this.$store.dispatch('getAllAttentions')
+        this.$store.dispatch('getPendingAttentions')
         .then(function(response){
-            app.attentions = response.data.attentions;
-            console.log(app.attentions);
+            app.sections = response.data.attentions;
+            console.log(app.sections);
         })
         .catch(err => {
             console.log(err);
         });
+
+        
     },
     methods: {
         dischargePatient: function(attention_id){
+            var app = this;
             this.$store.dispatch('dischargePatient', attention_id)
             // eslint-disable-next-line no-unused-vars
             .then(function(response){
-                //refreshScreen();
+                if(response.status == 200){
+                    var found = app.attentions.find((attention) => {
+                        return attention._id == attention_id;
+                    });
+
+                    var index = app.attentions.indexOf(found);
+
+                    if (index > -1) {
+                        app.attentions.splice(index, 1);
+                    }
+
+                    
+                }
             })
             .catch(err => {err;})
         }

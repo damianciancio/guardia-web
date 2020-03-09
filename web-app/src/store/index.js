@@ -58,6 +58,15 @@ const store = new Vuex.Store({
                 .catch(err => reject(err));
             });
         },
+        getPendingAttentions: function(context){
+            return new Promise((resolve, reject) =>{
+                axios.get(context.state.apiRoot + '/attentions?only_pending=true', store.getters.authenticationHeader)
+                .then(function(response){
+                    resolve(response);
+                })
+                .catch(err => reject(err));
+            });
+        },
         getAllSections: function(context){
             return new Promise((resolve, reject) => {
                 axios.get(context.state.apiRoot + '/sections', store.getters.authenticationHeader)
@@ -71,12 +80,12 @@ const store = new Vuex.Store({
         },
         dischargePatient: function(context, attention_id){
             return new Promise((resolve, reject) => {
-                axios.put(context.state.apiRoot + '/attentions/' + attention_id + '/close', store.getters.authenticationHeader)
+                axios.put(context.state.apiRoot + '/attentions/' + attention_id + '/close',{}, store.getters.authenticationHeader)
                 .then(function(response){
                     resolve(response);
                 })
                 .catch(err => reject(err));
-            })
+            });
         },
         saveAttention: function(context, attention){
             return new Promise((resolve, reject) => {
@@ -85,6 +94,13 @@ const store = new Vuex.Store({
                     resolve(response);
                 })
                 .catch(err => reject(err));
+            });
+        },
+        saveSection: function(context, section){
+            return new Promise((resolve, reject) => {
+                axios.post(context.state.apiRoot + '/sections', section, store.getters.authenticationHeader)
+                .then(resolve)
+                .catch(reject);
             });
         }
 
