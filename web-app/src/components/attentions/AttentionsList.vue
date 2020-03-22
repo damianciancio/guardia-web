@@ -28,7 +28,7 @@
                                                 <a href="#">Editar</a>
                                             </span>
                                             <span>
-                                                <a style="cursor:pointer;" v-on:click="dischargePatient(attention._id)">Listo</a>
+                                                <a style="cursor:pointer;" v-on:click="dischargePatient(attention)">Listo</a>
                                             </span>
                                         </div>
                                     </div>
@@ -119,22 +119,38 @@ export default {
         
     },
     methods: {
-        dischargePatient: function(attention_id){
+        dischargePatient: function(attention){
             var app = this;
-            this.$store.dispatch('dischargePatient', attention_id)
+            this.$store.dispatch('dischargePatient', attention._id)
             // eslint-disable-next-line no-unused-vars
             .then(function(response){
                 if(response.status == 200){
-                    var found = app.attentions.find((attention) => {
-                        return attention._id == attention_id;
+
+                    // TODO: abstraer la attention en un nuevo componente
+                    var section_found = app.sections.find(section => {
+                        if (section._id == attention.section._id) {
+                            return true;
+                        }
+                        return false;
                     });
 
-                    var index = app.attentions.indexOf(found);
+                    if (section_found) {
+                        var attention_found = section_found.attentions.find(attention_it => {
+                            if (attention_it._id == attention._id) {
+                                return true;
+                            }
+                            return false;
+                        });
 
-                    if (index > -1) {
-                        app.attentions.splice(index, 1);
+                        if (attention_found) {
+                            var index = section_found.attentions.indexOf(attention_found);
+                        }
+                    
+                        if (index > -1) {
+                            section_found.attentions.splice(index, 1);
+                        }
+
                     }
-
                     
                 }
             })
@@ -169,6 +185,7 @@ export default {
                             if (attention_found) {
                                 attention_found.pending_jobs.push(response.data.pending_jobs.slice(-1)[0]);
                             }
+
                         }
                     }
                 })
