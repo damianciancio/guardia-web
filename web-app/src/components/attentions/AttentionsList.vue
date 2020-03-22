@@ -16,7 +16,7 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
-                                <div class="row">
+                                <div class="row attention-header">
                                     <div class="col-md-4">
                                         <h4 class="card-title">
                                             {{attention.bed.description}} - {{attention.patient_name}} ({{attention.patient_age}})
@@ -28,7 +28,7 @@
                                                 <a href="#">Editar</a>
                                             </span>
                                             <span>
-                                                <a v-on:click="dischargePatient(attention._id)">Listo</a>
+                                                <a style="cursor:pointer;" v-on:click="dischargePatient(attention._id)">Listo</a>
                                             </span>
                                         </div>
                                     </div>
@@ -48,14 +48,16 @@
                                         </ul>
                                     </div>
                                     <div class="col-md-6">
-                                        <div v-if="attention.pending_jobs.length != 0">
-                                            <div class="row">
+                                        <div>
+                                            <div v-if="attention.pending_jobs.length != 0" class="row">
                                                 <div class="col-md-12">
                                                     <h5>Estudios pendientes</h5>
                                                     <ul>
                                                         <li v-for="job in attention.pending_jobs" :key="job._id">
-                                                            <b-icon-clock></b-icon-clock> {{job.job.description}} 
-                                                            <button class="btn btn-default btn-sm">
+                                                            <b-icon-clock v-if="!job.done"></b-icon-clock> 
+                                                            <b-icon-check v-else></b-icon-check> 
+                                                             {{job.description}} 
+                                                            <button v-if="!job.done" class="btn btn-default btn-sm">
                                                                 Listo
                                                             </button>
                                                         </li>
@@ -65,7 +67,7 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="text-right">
-                                                        <a href="#">Agregar estudio</a>
+                                                        <b-button v-on:click="selectedAttention = attention" v-b-modal.modal-add-job>Agregar estudio</b-button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -78,6 +80,13 @@
                 </div>
             </div>
         </div>
+        <div>
+            <b-modal @ok="addPatientJob" id="modal-add-job" :title="'Agregar estudio a ' + selectedAttention.patient_name">
+                <label>Estudio</label>
+                <input v-model="jobToAddDescription" class="form-control" type="text" />
+            </b-modal>
+        </div>
+
     </div>
 </template>
 
@@ -91,7 +100,9 @@ export default {
         return {
             attentions: [],
             isMobile: true,
-            sections: []
+            sections: [],
+            selectedAttention: {},
+            jobToAddDescription: ""
         }
     },
     mounted: function(){
@@ -128,6 +139,24 @@ export default {
                 }
             })
             .catch(err => {err;})
+        },
+        addPatientJob: function(){
+            var app = this;
+            if(this.selectedAttention && this.jobToAddDescription.trim() != "") {
+                this.$store.dispatch(
+                    'addPatientJob', 
+                    {
+                        'attention_id': this.selectedAttention._id,
+                        'job_description': this.jobToAddDescription
+                    }
+                ).then(response => {
+                    if(response){
+                        app.selectedAttention.pending_jobs = response.pending_jobs;
+                    }
+                })
+                
+                ;
+            }
         }
     }
 }
@@ -136,4 +165,10 @@ export default {
     li {
         list-style-type: none;
     }
+
+    .attention-header {
+        border-bottom: 1px solid #dfdfdf;
+        margin-bottom: 10px;
+    }
+
 </style>

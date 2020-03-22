@@ -102,6 +102,13 @@ const store = new Vuex.Store({
                 .then(resolve)
                 .catch(reject);
             });
+        },
+        addPatientJob: function(context, data) {
+            return new Promise((resolve, reject) => {
+                axios.put(context.state.apiRoot + '/attentions/' + data.attention_id + '/pending-jobs/', data, store.getters.authenticationHeader)
+                .then(resolve)
+                .catch(reject);
+            });
         }
 
     }
