@@ -151,7 +151,25 @@ export default {
                     }
                 ).then(response => {
                     if(response){
-                        app.selectedAttention.pending_jobs = response.pending_jobs;
+                        var section_found = app.sections.find(section => {
+                            if (section._id == app.selectedAttention.section._id) {
+                                return true;
+                            }
+                            return false;
+                        });
+
+                        if (section_found) {
+                            var attention_found = section_found.attentions.find(attention => {
+                                if (attention._id == app.selectedAttention._id) {
+                                    return true;
+                                }
+                                return false;
+                            });
+
+                            if (attention_found) {
+                                attention_found.pending_jobs.push(response.data.pending_jobs.slice(-1)[0]);
+                            }
+                        }
                     }
                 })
                 
