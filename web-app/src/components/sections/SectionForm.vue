@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-12">
             <div>
-                <h1>Agregar sección</h1>
+                <h1>{{title}}</h1>
                 <b-form>
                     <b-form-group
                         label="Descrición"
@@ -49,6 +49,7 @@
     </div>
 </template>
 <script>
+    /* eslint-disable no-console */
 export default {
     name: 'SectionForm',
     data() {
@@ -59,18 +60,57 @@ export default {
             },
             bed: {
                 description: ''
-            },
-            mode: 'new'
+            }
         };
+    },
+    props: ['mode', '_id'],
+    mounted: function() {
+        // console.log(this.mode);
+        // console.log(this._id);
+        var app = this;
+        this.$store.dispatch('getSection',this._id).
+        then((response) => {
+            if (response.status == 200) {
+                app.section = response.data.section;
+            }
+        });
+    },
+    computed: {
+        title: function() {
+            if (this.mode == 'agregar') {
+                return "Agregar sección";
+            }
+
+            return "Editar sección " + this.section.description;
+        }
     },
     methods: {
         saveSection: function() {
-            this.$store.dispatch('saveSection',this.section).
-            then((response) =>{
-                if(response.status == 200){
-                    alert("asd");
-                }
-            });
+            var app = this;
+
+            if (this.mode == 'agregar') {
+    
+                this.$store.dispatch('saveSection', this.section).
+                then((response) =>{
+                    if(response.status == 200){
+                        alert('Sección agregada con éxito!');
+                        app.$router.replace({path:'secciones'});
+                    }
+                });
+            
+            } else {
+
+                this.$store.dispatch('updateSection', this.section).
+                then((response) => {
+                    
+                    if(response.status == 200){
+                        alert('Sección actualizada con éxito!');
+                        app.$router.replace({path:'secciones'});
+                    }
+
+                });
+
+            }
         },
         addBed: function(){
             if(this.bed.description.trim() != ''){

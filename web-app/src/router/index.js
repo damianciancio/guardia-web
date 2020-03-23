@@ -5,6 +5,7 @@ import Login from '../components/user/login';
 import AttentionsList from '../components/attentions/AttentionsList';
 import AttentionForm from '../components/attentions/AttentionForm';
 import SectionForm from '../components/sections/SectionForm';
+import SectionList from '../components/sections/SectionList';
 
 Vue.use(VueRouter);
 
@@ -27,7 +28,19 @@ export default new VueRouter({
             component: AttentionForm
         },
         {
-            path: '/secciones/agregar',
+            path: '/secciones',
+            name: 'Secciones',
+            component: SectionList
+        },
+        {
+            path: '/secciones/:mode/:_id',
+            props: true,
+            name: 'Editar sección',
+            component: SectionForm
+        },
+        {
+            path: '/secciones/:mode',
+            props: true,
             name: 'Agregar sección',
             component: SectionForm
         }

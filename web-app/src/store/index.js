@@ -103,6 +103,20 @@ const store = new Vuex.Store({
                 .catch(reject);
             });
         },
+        updateSection: function(context, section){
+            return new Promise((resolve, reject) => {
+                axios.put(context.state.apiRoot + '/sections', {section: section}, store.getters.authenticationHeader)
+                .then(resolve)
+                .catch(reject);
+            });
+        },
+        getSection: function(context, section_id){
+            return new Promise((resolve, reject) => {
+                axios.get(context.state.apiRoot + '/sections/' + section_id, store.getters.authenticationHeader)
+                .then(resolve)
+                .catch(reject);
+            });
+        },
         addPatientJob: function(context, data) {
             return new Promise((resolve, reject) => {
                 axios.put(context.state.apiRoot + '/attentions/' + data.attention_id + '/pending-jobs/', data, store.getters.authenticationHeader)

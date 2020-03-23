@@ -28,7 +28,7 @@
                                                 <a href="#">Editar</a>
                                             </span>
                                             <span>
-                                                <a style="cursor:pointer;" v-on:click="dischargePatient(attention)">Listo</a>
+                                                <a style="cursor:pointer;" href="#" v-on:click="dischargePatient(attention)">Listo</a>
                                             </span>
                                         </div>
                                     </div>

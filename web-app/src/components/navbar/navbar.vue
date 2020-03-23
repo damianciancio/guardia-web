@@ -13,7 +13,7 @@
                 </router-link>
             </b-navbar-nav>
             <b-navbar-nav>
-                <router-link to="/secciones/agregar">
+                <router-link to="/secciones">
                     <b-nav-text>Secciones</b-nav-text>
                 </router-link>
             </b-navbar-nav>
